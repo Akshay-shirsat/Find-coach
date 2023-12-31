@@ -22,11 +22,19 @@
         <base-button>{{ submitButtonCaption }}</base-button>
         <base-button type="button" mode="flat" @click="switchAuthMode">{{ switchModeButtonCaption }}</base-button>
       </form>
+      <base-button v-if="!isSignedIn" @click="hndleGsignIn">Google</base-button>
+        <base-button  v-if="!isSignedIn" @click="hndleGitsignIn" >Github</base-button>
     </base-card>
   </div>
 </template>
 
 <script>
+import {getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+const provider = new GoogleAuthProvider(); 
+import firebaseConfig from '../../firebaseConfig'
+firebaseConfig
+
+const auth = getAuth();
 export default {
   data() {
     return {
@@ -36,6 +44,7 @@ export default {
       mode: 'login',
       isLoading: false,
       error: null,
+      isSignedIn: false
     };
   },
   computed: {
@@ -85,6 +94,17 @@ export default {
       }
 
       this.isLoading = false;
+    },
+    hndleGsignIn(){
+      
+      signInWithPopup(auth, provider)
+  .then((result) => {
+    console.log(result)
+    this.$router.replace('./coaches')
+    // ...
+  }).catch((error) => {
+    console.log(error)
+  });
     },
     switchAuthMode() {
       if (this.mode === 'login') {

@@ -15,7 +15,7 @@
           <router-link to="/auth">Login</router-link>
         </li>
         <li v-if="isLoggedIn">
-          <base-button @click="logout">Logout</base-button>
+          <base-button @click="confirmLogout">Logout</base-button>
         </li>
       </ul>
     </nav>
@@ -27,15 +27,23 @@ export default {
   computed: {
     isLoggedIn() {
       return this.$store.getters.isAuthenticated;
-    }
+    },
   },
   methods: {
+    confirmLogout() {
+      const confirmLogout = window.confirm('Are you sure you want to logout?');
+
+      if (confirmLogout) {
+        // User clicked "OK" to confirm logout
+        this.logout();
+      }
+    },
     logout() {
       this.$store.dispatch('logout');
-      this.$router.replace('./coaches')
-    }
-  }
-}
+      this.$router.replace('/coaches');
+    },
+  },
+};
 </script>
 
 <style scoped>
